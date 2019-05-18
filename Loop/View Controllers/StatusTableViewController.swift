@@ -901,21 +901,26 @@ final class StatusTableViewController: ChartsTableViewController {
 
                 switch statusRowMode {
                 case .recommendedTempBasal(tempBasal: let tempBasal, at: let date, enacting: let enacting) where !enacting:
-                    self.updateHUDandStatusRows(statusRowMode: .recommendedTempBasal(tempBasal: tempBasal, at: date, enacting: true), newSize: nil, animated: true)
-
-                    self.deviceManager.loopManager.enactRecommendedTempBasal { (error) in
-                        DispatchQueue.main.async {
-                            self.updateHUDandStatusRows(statusRowMode: .hidden, newSize: nil, animated: true)
-
-                            if let error = error {
-                                self.deviceManager.logger.addError(error, fromSource: "TempBasal")
-                                self.present(UIAlertController(with: error), animated: true)
-                            } else {
-                                self.refreshContext.update(with: .status)
-                                self.log.debug("[reloadData] after manually enacting temp basal")
-                                self.reloadData()
+                    let confirmVC = UIAlertController(recommendedTempBasalHandler: {
+                        self.updateHUDandStatusRows(statusRowMode: .recommendedTempBasal(tempBasal: tempBasal, at: date, enacting: true), newSize: nil, animated: true)
+                        
+                        self.deviceManager.loopManager.enactRecommendedTempBasal { (error) in
+                            DispatchQueue.main.async {
+                                self.updateHUDandStatusRows(statusRowMode: .hidden, newSize: nil, animated: true)
+                                
+                                if let error = error {
+                                    self.deviceManager.logger.addError(error, fromSource: "TempBasal")
+                                    self.present(UIAlertController(with: error), animated: true)
+                                } else {
+                                    self.refreshContext.update(with: .status)
+                                    self.log.debug("[reloadData] after manually enacting temp basal")
+                                    self.reloadData()
+                                }
                             }
                         }
+                    })
+                    present(confirmVC, animated: true) {
+                        tableView.deselectRow(at: indexPath, animated: true)
                     }
                 case .pumpSuspended(let resuming) where !resuming:
                     self.updateHUDandStatusRows(statusRowMode: .pumpSuspended(resuming: true) , newSize: nil, animated: true)
@@ -933,23 +938,29 @@ final class StatusTableViewController: ChartsTableViewController {
                         }
                     }
                 case .bolusing:
-                    self.updateHUDandStatusRows(statusRowMode: .cancelingBolus, newSize: nil, animated: true)
-                    self.deviceManager.pumpManager?.cancelBolus() { (result) in
-                        DispatchQueue.main.async {
-                            switch result {
-                            case .success:
-                                // show user confirmation and actual delivery amount?
-                                break
-                            case .failure(let error):
-                                let alert = UIAlertController(with: error, title: NSLocalizedString("Error Canceling Bolus", comment: "The alert title for an error while canceling a bolus"))
-                                self.present(alert, animated: true, completion: nil)
-                                if case .inProgress(let dose) = self.bolusState {
-                                    self.updateHUDandStatusRows(statusRowMode: .bolusing(dose: dose), newSize: nil, animated: true)
-                                } else {
-                                    self.updateHUDandStatusRows(statusRowMode: .hidden, newSize: nil, animated: true)
+                    // MARK: MW Custom - Add alert for confirming bolus cancellation
+                    let confirmVC = UIAlertController(cancelBolusHandler: {
+                        self.updateHUDandStatusRows(statusRowMode: .cancelingBolus, newSize: nil, animated: true)
+                        self.deviceManager.pumpManager?.cancelBolus() { (result) in
+                            DispatchQueue.main.async {
+                                switch result {
+                                case .success:
+                                    // show user confirmation and actual delivery amount?
+                                    break
+                                case .failure(let error):
+                                    let alert = UIAlertController(with: error, title: NSLocalizedString("Error Canceling Bolus", comment: "The alert title for an error while canceling a bolus"))
+                                    self.present(alert, animated: true, completion: nil)
+                                    if case .inProgress(let dose) = self.bolusState {
+                                        self.updateHUDandStatusRows(statusRowMode: .bolusing(dose: dose), newSize: nil, animated: true)
+                                    } else {
+                                        self.updateHUDandStatusRows(statusRowMode: .hidden, newSize: nil, animated: true)
+                                    }
                                 }
                             }
                         }
+                    })
+                    present(confirmVC, animated: true) {
+                        tableView.deselectRow(at: indexPath, animated: true)
                     }
 
                 default:
@@ -1091,11 +1102,15 @@ final class StatusTableViewController: ChartsTableViewController {
     }
 
     @IBAction func togglePreMealMode(_ sender: UIBarButtonItem) {
-        if preMealMode == true {
-            deviceManager.loopManager.settings.glucoseTargetRangeSchedule?.clearOverride(matching: .preMeal)
-        } else {
-            _ = self.deviceManager.loopManager.settings.glucoseTargetRangeSchedule?.setOverride(.preMeal, until: Date(timeIntervalSinceNow: .hours(1)))
-        }
+        // MARK: MW Custom - Confirm the toggle of the pre-meal button
+        let confirmVC = UIAlertController(togglePreMealHandler: {
+            if self.preMealMode == true {
+                self.deviceManager.loopManager.settings.glucoseTargetRangeSchedule?.clearOverride(matching: .preMeal)
+            } else {
+                _ = self.deviceManager.loopManager.settings.glucoseTargetRangeSchedule?.setOverride(.preMeal, until: Date(timeIntervalSinceNow: .hours(1)))
+            }
+        })
+        present(confirmVC, animated: true, completion: nil)
     }
 
     @IBAction func toggleWorkoutMode(_ sender: UIBarButtonItem) {

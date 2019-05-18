@@ -49,6 +49,7 @@ final class DeviceDataManager {
     let remoteDataManager = RemoteDataManager()
 
     private var nightscoutDataManager: NightscoutDataManager!
+    private var badgeManager: BadgeManager!
 
     var lastError: (date: Date, error: Error)? {
         return lockedLastError.value
@@ -161,6 +162,7 @@ final class DeviceDataManager {
         )
         watchManager = WatchDataManager(deviceManager: self)
         nightscoutDataManager = NightscoutDataManager(deviceDataManager: self)
+        badgeManager = BadgeManager(deviceDataManager: self)
 
         loopManager.delegate = self
         loopManager.carbStore.syncDelegate = remoteDataManager.nightscoutService.uploader
@@ -214,15 +216,27 @@ extension DeviceDataManager: CGMManagerDelegate {
         case .newData(let values):
             log.default("CGMManager:\(type(of: manager)) did update with new data")
 
+            // MARK: MW Custom - Moved the manager.shouldSyncToRemoteService check inside the switch statement so that the badgeManager can be called.
             loopManager.addGlucose(values) { result in
-                if manager.shouldSyncToRemoteService {
-                    switch result {
-                    case .success(let values):
+//                self.log.default("CGMManager:\(type(of: manager)) did update with new data - \(result)")
+                switch result {
+                case .success(let values):
+                    if manager.shouldSyncToRemoteService {
                         self.nightscoutDataManager.uploadGlucose(values, sensorState: manager.sensorState)
-                    case .failure:
-                        break
                     }
+                    self.badgeManager.updateBadge(values, sensorState: manager.sensorState)
+                case .failure:
+                    break
                 }
+//                if manager.shouldSyncToRemoteService {
+//                    switch result {
+//                    case .success(let values):
+//                        self.nightscoutDataManager.uploadGlucose(values, sensorState: manager.sensorState)
+//                        self.badgeDataManager.uploadGlucose(values, sensorState: manager.sensorState)
+//                    case .failure:
+//                        break
+//                    }
+//                }
 
                 self.pumpManager?.assertCurrentPumpData()
             }
