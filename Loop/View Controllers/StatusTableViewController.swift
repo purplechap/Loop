@@ -901,7 +901,8 @@ final class StatusTableViewController: ChartsTableViewController {
 
                 switch statusRowMode {
                 case .recommendedTempBasal(tempBasal: let tempBasal, at: let date, enacting: let enacting) where !enacting:
-                    let confirmVC = UIAlertController(recommendedTempBasalHandler: {
+                    // MARK: MW Custom - Add alert for recommended bolus
+                    let confirmVC = UIAlertController(mwRecommendedTempBasalHandler: {
                         self.updateHUDandStatusRows(statusRowMode: .recommendedTempBasal(tempBasal: tempBasal, at: date, enacting: true), newSize: nil, animated: true)
                         
                         self.deviceManager.loopManager.enactRecommendedTempBasal { (error) in
@@ -939,7 +940,7 @@ final class StatusTableViewController: ChartsTableViewController {
                     }
                 case .bolusing:
                     // MARK: MW Custom - Add alert for confirming bolus cancellation
-                    let confirmVC = UIAlertController(cancelBolusHandler: {
+                    let confirmVC = UIAlertController(mwCancelBolusHandler: {
                         self.updateHUDandStatusRows(statusRowMode: .cancelingBolus, newSize: nil, animated: true)
                         self.deviceManager.pumpManager?.cancelBolus() { (result) in
                             DispatchQueue.main.async {
@@ -1103,7 +1104,7 @@ final class StatusTableViewController: ChartsTableViewController {
 
     @IBAction func togglePreMealMode(_ sender: UIBarButtonItem) {
         // MARK: MW Custom - Confirm the toggle of the pre-meal button
-        let confirmVC = UIAlertController(togglePreMealHandler: {
+        let confirmVC = UIAlertController(mwTogglePreMealHandler: {
             if self.preMealMode == true {
                 self.deviceManager.loopManager.settings.glucoseTargetRangeSchedule?.clearOverride(matching: .preMeal)
             } else {

@@ -11,7 +11,7 @@ import LoopKit
 import LoopKitUI
 
 extension UIAlertController {
-    convenience init(cancelBolusHandler handler: @escaping () -> Void) {
+    convenience init(mwCancelBolusHandler handler: @escaping () -> Void) {
         self.init(
             title: nil,
             message: "Are you sure you want to cancel the bolus?",
@@ -27,7 +27,7 @@ extension UIAlertController {
         addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
     }
 
-    convenience init(recommendedTempBasalHandler handler: @escaping () -> Void) {
+    convenience init(mwRecommendedTempBasalHandler handler: @escaping () -> Void) {
         self.init(
             title: nil,
             message: "Are you sure you want to apply the recommended temp basal?",
@@ -43,7 +43,7 @@ extension UIAlertController {
         addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
     }
 
-    convenience init(togglePreMealHandler handler: @escaping () -> Void) {
+    convenience init(mwTogglePreMealHandler handler: @escaping () -> Void) {
         self.init(
             title: nil,
             message: "Are you sure you want to toggle the pre-meal button?",
