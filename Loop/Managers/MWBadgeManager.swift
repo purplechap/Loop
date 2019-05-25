@@ -11,7 +11,7 @@ import HealthKit
 import LoopKit
 
 
-final class BadgeManager {
+final class MWBadgeManager {
 
     unowned let deviceManager: DeviceDataManager
     

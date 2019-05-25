@@ -49,7 +49,7 @@ final class DeviceDataManager {
     let remoteDataManager = RemoteDataManager()
 
     private var nightscoutDataManager: NightscoutDataManager!
-    private var badgeManager: BadgeManager!
+    private var badgeManager: MWBadgeManager!
 
     var lastError: (date: Date, error: Error)? {
         return lockedLastError.value
@@ -162,7 +162,7 @@ final class DeviceDataManager {
         )
         watchManager = WatchDataManager(deviceManager: self)
         nightscoutDataManager = NightscoutDataManager(deviceDataManager: self)
-        badgeManager = BadgeManager(deviceDataManager: self)
+        badgeManager = MWBadgeManager(deviceDataManager: self)
 
         loopManager.delegate = self
         loopManager.carbStore.syncDelegate = remoteDataManager.nightscoutService.uploader

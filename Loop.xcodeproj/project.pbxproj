@@ -23,7 +23,7 @@
 
 /* Begin PBXBuildFile section */
 		27CA259722906E700050529C /* MWUIAlertController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CA259622906E6F0050529C /* MWUIAlertController.swift */; };
-		27CA259922906E7C0050529C /* BadgeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CA259822906E7C0050529C /* BadgeManager.swift */; };
+		27CA259922906E7C0050529C /* MWBadgeManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27CA259822906E7C0050529C /* MWBadgeManager.swift */; };
 		43027F0F1DFE0EC900C51989 /* HKUnit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F526D5E1DF2459000A04910 /* HKUnit.swift */; };
 		4302F4E11D4E9C8900F0FCAF /* TextFieldTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4302F4E01D4E9C8900F0FCAF /* TextFieldTableViewController.swift */; };
 		4302F4E31D4EA54200F0FCAF /* InsulinDeliveryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4302F4E21D4EA54200F0FCAF /* InsulinDeliveryTableViewController.swift */; };
@@ -582,7 +582,7 @@
 
 /* Begin PBXFileReference section */
 		27CA259622906E6F0050529C /* MWUIAlertController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MWUIAlertController.swift; sourceTree = "<group>"; };
-		27CA259822906E7C0050529C /* BadgeManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BadgeManager.swift; sourceTree = "<group>"; };
+		27CA259822906E7C0050529C /* MWBadgeManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MWBadgeManager.swift; sourceTree = "<group>"; };
 		4302F4E01D4E9C8900F0FCAF /* TextFieldTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldTableViewController.swift; sourceTree = "<group>"; };
 		4302F4E21D4EA54200F0FCAF /* InsulinDeliveryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InsulinDeliveryTableViewController.swift; sourceTree = "<group>"; };
 		430B29892041F54A00BA9F93 /* NSUserDefaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSUserDefaults.swift; sourceTree = "<group>"; };
@@ -1522,7 +1522,7 @@
 		43F5C2E41B93C5D4003EB13D /* Managers */ = {
 			isa = PBXGroup;
 			children = (
-				27CA259822906E7C0050529C /* BadgeManager.swift */,
+				27CA259822906E7C0050529C /* MWBadgeManager.swift */,
 				439897361CD2F80600223065 /* AnalyticsManager.swift */,
 				439BED291E76093C00B0AED5 /* CGMManager.swift */,
 				43DBF0521C93EC8200B3C386 /* DeviceDataManager.swift */,
@@ -2456,7 +2456,7 @@
 				431A8C401EC6E8AB00823B9C /* CircleMaskView.swift in Sources */,
 				439897371CD2F80600223065 /* AnalyticsManager.swift in Sources */,
 				430D85891F44037000AF2D4F /* HUDViewTableViewCell.swift in Sources */,
-				27CA259922906E7C0050529C /* BadgeManager.swift in Sources */,
+				27CA259922906E7C0050529C /* MWBadgeManager.swift in Sources */,
 				43A51E211EB6DBDD000736CC /* ChartsTableViewController.swift in Sources */,
 				438849EE1D2A1EBB003B3F23 /* MLabService.swift in Sources */,
 				438D42FB1D7D11A4003244B0 /* PredictionInputEffectTableViewCell.swift in Sources */,
