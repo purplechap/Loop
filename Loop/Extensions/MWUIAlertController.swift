@@ -35,7 +35,7 @@ extension UIAlertController {
         )
         
         addAction(UIAlertAction(
-            title: "Cancel Bolus",
+            title: "Apply Bolus",
             style: .destructive,
             handler: { _ in handler() }
         ))
